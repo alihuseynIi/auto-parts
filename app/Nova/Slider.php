@@ -18,6 +18,11 @@ class Slider extends Resource
     public static $model = \App\Models\Slider::class;
 
     /**
+     * @var int[]
+     */
+    public static $perPageOptions = [10];
+
+    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string

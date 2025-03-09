@@ -30,6 +30,11 @@ class Category extends Resource
     public static $model = \App\Models\Category::class;
 
     /**
+     * @var int[]
+     */
+    public static $perPageOptions = [10];
+
+    /**
      * @var string
      */
     public static $title = 'name';

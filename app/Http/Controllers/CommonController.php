@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CartRequest;
+use App\Http\Requests\OrderRequest;
 use App\Http\Resources\CartProductsResource;
 use App\Services\CommonService;
 use Illuminate\Http\JsonResponse;
@@ -55,7 +56,22 @@ class CommonController extends Controller
     public function getCartProducts(Request $request): JsonResponse
     {
         try {
-            return $this->response(Response::HTTP_OK, CartProductsResource::collection( $this->commonService->getCartProducts($request->user())));
+            return $this->response(Response::HTTP_OK, $this->commonService->getCartProducts($request->user()));
+        } catch (Throwable $exception) {
+            $this->logException($exception);
+            return $this->response(Response::HTTP_INTERNAL_SERVER_ERROR, [], __("messages.response.error"));
+        }
+    }
+
+    /**
+     * @param OrderRequest $request
+     * @return JsonResponse
+     */
+    public function order(OrderRequest $request): JsonResponse
+    {
+        try {
+            $response = $this->commonService->order($request);
+            return $this->response($response["status"] ?? Response::HTTP_INTERNAL_SERVER_ERROR, message: $response["message"] ?? null);
         } catch (Throwable $exception) {
             $this->logException($exception);
             return $this->response(Response::HTTP_INTERNAL_SERVER_ERROR, [], __("messages.response.error"));

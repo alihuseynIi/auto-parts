@@ -29,12 +29,7 @@ class Order extends Model
     /**
      * @var string[]
      */
-    protected $fillable = [
-        'user_id',
-        'order_number',
-        'total_price',
-        'status',
-    ];
+    protected $guarded = [];
 
     /**
      * @return BelongsTo

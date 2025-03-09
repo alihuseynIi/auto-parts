@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderItem extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'order_id',
         'product_id',
@@ -13,20 +17,21 @@ class OrderItem extends Model
         'product_price',
         'quantity',
         'total_price',
+        'status'
     ];
 
     /**
-     * Sifarişə (OrderNotification) əlaqə.
+     * @return BelongsTo
      */
-    public function order()
+    public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'order_id');
     }
 
     /**
-     * Məhsula (Product) əlaqə.
+     * @return BelongsTo
      */
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
     }

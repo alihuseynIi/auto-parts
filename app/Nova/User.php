@@ -28,6 +28,11 @@ class User extends Resource
     public static string $model = \App\Models\User::class;
 
     /**
+     * @var int[]
+     */
+    public static $perPageOptions = [10];
+
+    /**
      * @var string
      */
     public static $title = 'name';

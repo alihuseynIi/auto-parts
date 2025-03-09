@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('date')->nullable();
             $table->decimal('total_price', 10);
-            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }

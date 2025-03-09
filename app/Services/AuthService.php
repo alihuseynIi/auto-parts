@@ -5,8 +5,10 @@ namespace App\Services;
 use App\Models\User;
 use App\Traits\ExceptionTrait;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class AuthService
 {
@@ -15,10 +17,25 @@ class AuthService
     /**
      * @param Request $request
      * @return array
+     * @throws ConnectionException
      */
     public function login(Request $request): array
     {
         $credentials = ["email" => $request->input("email"), "password" => $request->input("password")];
+
+        $captchaToken = $request->input('captcha_token');
+        $secretKey    = env('RECAPTCHA_SECRET_KEY');
+
+        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret'   => $secretKey,
+            'response' => $captchaToken
+        ]);
+
+        $captchaResult = json_decode($response->body());
+
+        if (!isset($captchaResult->success) || $captchaResult->success !== true) {
+            return ["message" => "reCAPTCHA is invalid"];
+        }
 
         if (!Auth::attempt($credentials)) {
             return ["message" => "Email və ya şifrə yanlışdır"];

@@ -28,6 +28,11 @@ class Order extends Resource
     public static string $model = \App\Models\Order::class;
 
     /**
+     * @var int[]
+     */
+    public static $perPageOptions = [10];
+
+    /**
      * @var string
      */
     public static $title = 'id';
@@ -55,22 +60,13 @@ class Order extends Resource
             ->readonly(),
 
             Number::make('Ümumi Qiymət', 'total_price')
+                ->displayUsing(fn($value) => number_format($value, 2).' ₼')
                 ->sortable()
                 ->readonly(),
 
             Text::make('Çatdırılma Saatı', 'date')
                 ->sortable()
                 ->readonly(),
-
-            Select::make('Status', 'status')
-                ->options([
-                    'pending' => 'Gözləmədə',
-                    'accepted' => 'Qəbul edildi',
-                    'completed' => 'Tamamlandı',
-                    'canceled' => 'Ləğv edildi',
-                ])
-                ->displayUsingLabels()
-                ->sortable(),
 
             HasMany::make('Sifariş Məhsulları', 'items', OrderItem::class),
         ];
@@ -98,8 +94,8 @@ class Order extends Resource
      * @param Request $request
      * @return false
      */
-    public static function authorizedToCreate(Request $request): false
+    public static function authorizedToCreate(Request $request): true
     {
-        return false;
+        return true;
     }
 }

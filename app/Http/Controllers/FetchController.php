@@ -8,6 +8,7 @@ use App\Http\Requests\SearchProductsRequest;
 use App\Http\Resources\CategoriesResourceCollection;
 use App\Services\FetchService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -55,6 +56,20 @@ class FetchController extends Controller
     {
         try {
             return $this->response(Response::HTTP_OK, $this->fetchService->getSliders());
+        } catch (Throwable $exception) {
+            $this->logException($exception);
+            return $this->response(Response::HTTP_INTERNAL_SERVER_ERROR, [], __("messages.response.error"));
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getOrders(Request $request): JsonResponse
+    {
+        try {
+            return $this->response(Response::HTTP_OK, $this->fetchService->getOrders($request));
         } catch (Throwable $exception) {
             $this->logException($exception);
             return $this->response(Response::HTTP_INTERNAL_SERVER_ERROR, [], __("messages.response.error"));

@@ -32,6 +32,11 @@ class Product extends Resource
     public static $model = \App\Models\Product::class;
 
     /**
+     * @var int[]
+     */
+    public static $perPageOptions = [10];
+
+    /**
      * @var string
      */
     public static $title = 'name';
@@ -65,25 +70,35 @@ class Product extends Resource
                 ->sortable(),
 
             Select::make('Məhsulun növü', 'product_type')
-                ->options($this->getCategories('product_type'))->showOnIndex(false),
+                ->options($this->getCategories('product_type'))
+                ->showOnIndex(false)
+                ->displayUsing(fn($value) => $this->getCategoryNameById($value)),
 
             Select::make('Məhsulun kateqoriyası', 'product_category')
-                ->options($this->getCategories('product_category'))->showOnIndex(false),
+                ->options($this->getCategories('product_category'))
+                ->showOnIndex(false)
+                ->displayUsing(fn($value) => $this->getCategoryNameById($value)),
 
             Select::make('Brend', 'brand')
-                ->options($this->getCategories('brand'))->showOnIndex(false),
+                ->options($this->getCategories('brand'))
+                ->showOnIndex(false)
+                ->displayUsing(fn($value) => $this->getCategoryNameById($value)),
 
             Select::make('Avtomobilin markası', 'car_brand')
-                ->options($this->getCategories('car_brand'))->showOnIndex(false),
+                ->options($this->getCategories('car_brand'))
+                ->showOnIndex(false)
+                ->displayUsing(fn($value) => $this->getCategoryNameById($value)),
 
             Select::make('Avtomobilin modeli', 'car_model')
-                ->showOnIndex(false)
                 ->options(fn() => [])
                 ->dependsOn(['car_brand'], function (Select $field, NovaRequest $request, FormData $formData) {
                     if ($formData->car_brand) {
                         $field->options($this->getCarModels($formData->car_brand));
                     }
-                }),
+                })
+                ->showOnIndex(false)
+                ->displayUsing(fn($value) => $this->getCategoryNameById($value)),
+
 
             Number::make('Stok sayı', 'stock')
                 ->default(1)
@@ -93,9 +108,11 @@ class Product extends Resource
 
             Number::make('Qiymət', 'price')
                 ->rules('required')
+                ->displayUsing(fn($value) => number_format($value, 2).' ₼')
                 ->sortable(),
 
             Number::make('Endirimli qiymət', 'discounted_price')
+                ->displayUsing(fn($value) => number_format($value, 2).' ₼')
                 ->sortable(),
 
             Image::make('Şəkil', 'image')
@@ -154,6 +171,10 @@ class Product extends Resource
         return false;
     }
 
+    /**
+     * @param NovaRequest $request
+     * @return array
+     */
     public function lenses(NovaRequest $request)
     {
         return [
@@ -162,4 +183,18 @@ class Product extends Resource
             new TopSearchQueriesLens(),
         ];
     }
+
+    /**
+     * ID'ye göre kategori adını getirir
+     *
+     * @param int|null $id
+     * @return string
+     */
+    public function getCategoryNameById(?int $id): string
+    {
+        if (!$id) return '-';
+
+        return \App\Models\Category::find($id)->name ?? '-';
+    }
+
 }

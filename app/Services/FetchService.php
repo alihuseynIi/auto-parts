@@ -3,9 +3,12 @@
 namespace App\Services;
 
 use App\Models\Category;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\SearchLog;
 use App\Models\Slider;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
@@ -35,9 +38,9 @@ class FetchService
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
-    public function searchProducts(Request $request)
+    public function searchProducts(Request $request): LengthAwarePaginator
     {
         $productType = (int)$request->input("product_type");
         $brand = (int)$request->input("brand");
@@ -97,7 +100,7 @@ class FetchService
 
         }
 
-//        Product::factory(1000)->create();
+//        Product::factory(100)->create();
         $result = $query->paginate(
             perPage: $request->input("limit", 10),
             page: $request->input("page", 1)
@@ -126,5 +129,55 @@ class FetchService
     public function getSliders(): \Illuminate\Support\Collection
     {
         return Slider::query()->pluck("image");
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function getOrders(Request $request): mixed
+    {
+        $orderItemsPaginated = OrderItem::query()
+            ->whereHas('order', function ($query) use ($request) {
+                $query->where('user_id', $request->input('user_id'));
+            })
+            ->with('order')
+            ->orderByDesc(
+                Order::query()->select('created_at')
+                    ->whereColumn('orders.id', 'order_items.order_id')
+            );
+
+        if($request->input("limit")) {
+                $orderItemsPaginated = $orderItemsPaginated->paginate(
+                    perPage: $request->input("limit", 10),
+                    page: $request->input("page", 1)
+                );
+            } else {
+                $orderItemsPaginated = $orderItemsPaginated->get();
+            }
+
+        $formattedOrderItems = $orderItemsPaginated->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->product_name,
+                'product_price' => $item->product_price,
+                'quantity' => $item->quantity,
+                'total_price' => $item->total_price,
+                'status' => $item->status,
+                'created_at' => $item->order->created_at->format('d-m-Y'),
+            ];
+        });
+
+            $response = [];
+            if ($request->input("limit")) {
+                $response["current_page"] = $orderItemsPaginated->currentPage();
+                $response["last_page"] = $orderItemsPaginated->lastPage();
+                $response["per_page"] = $orderItemsPaginated->perPage();
+                $response["total"] = $orderItemsPaginated->total();
+            }
+
+            $response['order_items'] = $formattedOrderItems;
+
+        return $response;
     }
 }

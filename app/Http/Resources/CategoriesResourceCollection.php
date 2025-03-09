@@ -17,11 +17,13 @@ class CategoriesResourceCollection extends ResourceCollection
      */
     public function toArray($request): array|Arrayable|JsonSerializable
     {
+//        $lang = request()->input('lang');
+//        $all = $lang == 'AZ' ? 'Hamısı' : 'Все';
         return $this->collection
             ->groupBy('parent')
             ->map(function ($group) {
-                $allOption = new Category(['id' => "all", 'name' => 'Hamısı']);
-                $group->prepend($allOption);
+//                $allOption = new Category(['id' => "all", 'name' => $all]);
+//                $group->prepend($allOption);
 
                 return GetCategoriesResource::collection($group);
             })
