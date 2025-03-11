@@ -63,6 +63,19 @@ class FetchController extends Controller
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function getBrandSliders(): JsonResponse
+    {
+        try {
+            return $this->response(Response::HTTP_OK, $this->fetchService->getBrandSliders());
+        } catch (Throwable $exception) {
+            $this->logException($exception);
+            return $this->response(Response::HTTP_INTERNAL_SERVER_ERROR, [], __("messages.response.error"));
+        }
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      */

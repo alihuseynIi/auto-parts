@@ -16,6 +16,7 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::delete('/cart/remove', [CommonController::class, 'removeFromCart'])->middleware('validateUser');
     Route::get('/cart/products', [CommonController::class, 'getCartProducts'])->middleware('validateUser');
     Route::get('/sliders', [FetchController::class, 'getSliders'])->middleware('validateUser');
+    Route::get('/brand-sliders', [FetchController::class, 'getBrandSliders'])->middleware('validateUser');
     Route::post('/orders', [CommonController::class, 'order'])->middleware('validateUser');
     Route::get('/orders', [FetchController::class, 'getOrders'])->middleware('validateUser');
 });

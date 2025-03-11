@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -129,6 +130,14 @@ class FetchService
     public function getSliders(): \Illuminate\Support\Collection
     {
         return Slider::query()->pluck("image");
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function getBrandSliders(): \Illuminate\Support\Collection
+    {
+        return Brand::query()->pluck("image");
     }
 
     /**

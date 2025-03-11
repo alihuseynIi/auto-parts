@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Nova\Brand;
 use App\Nova\Category;
 use App\Nova\Dashboards\Report;
 use App\Nova\Order;
@@ -46,6 +47,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
                 MenuSection::make('Digər', [
                     MenuItem::resource(Slider::class),
+                    MenuItem::resource(Brand::class),
                     MenuItem::resource(User::class),
                 ])->icon('menu')->collapsable(),
             ];
