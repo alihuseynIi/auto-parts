@@ -27,6 +27,14 @@ class Product extends Resource
     }
 
     /**
+     * @return string
+     */
+    public static function singularLabel(): string
+    {
+        return 'Məhsul';
+    }
+
+    /**
      * @var string
      */
     public static $model = \App\Models\Product::class;
@@ -71,26 +79,31 @@ class Product extends Resource
 
             Select::make('Məhsulun növü', 'product_type')
                 ->options($this->getCategories('product_type'))
+                ->nullable()
                 ->showOnIndex(false)
                 ->displayUsing(fn($value) => $this->getCategoryNameById($value)),
 
             Select::make('Məhsulun kateqoriyası', 'product_category')
                 ->options($this->getCategories('product_category'))
+                ->nullable()
                 ->showOnIndex(false)
                 ->displayUsing(fn($value) => $this->getCategoryNameById($value)),
 
             Select::make('Brend', 'brand')
                 ->options($this->getCategories('brand'))
+                ->nullable()
                 ->showOnIndex(false)
                 ->displayUsing(fn($value) => $this->getCategoryNameById($value)),
 
             Select::make('Avtomobilin markası', 'car_brand')
                 ->options($this->getCategories('car_brand'))
+                ->nullable()
                 ->showOnIndex(false)
                 ->displayUsing(fn($value) => $this->getCategoryNameById($value)),
 
             Select::make('Avtomobilin modeli', 'car_model')
                 ->options(fn() => [])
+                ->nullable()
                 ->dependsOn(['car_brand'], function (Select $field, NovaRequest $request, FormData $formData) {
                     if ($formData->car_brand) {
                         $field->options($this->getCarModels($formData->car_brand));
@@ -185,8 +198,6 @@ class Product extends Resource
     }
 
     /**
-     * ID'ye göre kategori adını getirir
-     *
      * @param int|null $id
      * @return string
      */

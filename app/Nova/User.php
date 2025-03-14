@@ -17,9 +17,20 @@ class User extends Resource
 {
     use PasswordValidationRules;
 
+    /**
+     * @return string
+     */
     public static function label(): string
     {
         return 'İstifadəçilər';
+    }
+
+    /**
+     * @return string
+     */
+    public static function singularLabel(): string
+    {
+        return 'İstifadəçi';
     }
 
     /**
@@ -53,26 +64,26 @@ class User extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('Full Name', 'name')
+            Text::make('Ad', 'name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Text::make('Email')
+            Text::make('E-poçta', 'email')
                 ->sortable()
                 ->rules('required', 'email', 'max:255')
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}'),
 
-            Password::make('Password')
+            Password::make('Şifrə', 'password')
                 ->onlyOnForms()
                 ->creationRules($this->passwordRules())
                 ->updateRules($this->optionalPasswordRules()),
 
 
-            Repeatable::make('Addresses', 'addresses', [
+            Repeatable::make('Adreslər', 'addresses', [
                 Text::make('address')->rules('required'),
             ])
-                ->addRowLabel("Add Address")
+                ->addRowLabel("Yeni Adres")
                 ->fillUsing(function ($request, $model, $attribute, $requestAttribute) {
 
                     if (empty(json_decode($request['addresses'], true))) {
@@ -106,7 +117,7 @@ class User extends Resource
                 })->rules('required'),
 
 
-            Boolean::make('Is Admin', 'is_admin')
+            Boolean::make('Admin vəzifəsi', 'is_admin')
                 ->sortable()
                 ->trueValue(1)
                 ->falseValue(0)

@@ -69,7 +69,14 @@ class Category extends Resource
                     'car_brand' => "Avtomobilin markası",
                     'car_model' => "Avtomobilin modeli",
                 ])
-                ->displayUsingLabels(),
+                ->displayUsingLabels()
+                ->dependsOn(['parent'], function (Select $field, NovaRequest $request, FormData $formData) {
+                    if ($formData->get('parent') === 'car_brand') {
+                        $field->readonly();
+                    } else {
+                        $field->readonly(false);
+                    }
+                }),
 
             Select::make('Avtomobilin markası', 'brand_id')
                 ->sortable()
@@ -94,10 +101,13 @@ class Category extends Resource
                 })
                 ->options($this->brands())
                 ->displayUsing(function ($value) {
-                    if ((int) $value === 0) {
+                    $brand = $this->brands()[$value] ?? null;
+
+                    if (!$brand) {
                         return '-';
                     }
-                    return $this->brands()[$value] ?? $value;
+
+                    return $brand;
                 }),
         ];
     }

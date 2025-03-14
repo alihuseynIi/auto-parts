@@ -40,7 +40,7 @@ class Order extends Resource
     /**
      * @var string[]
      */
-    public static $search = ['id', 'status'];
+    public static $search = ['id'];
 
     /**
      * @param NovaRequest $request
@@ -94,8 +94,13 @@ class Order extends Resource
      * @param Request $request
      * @return false
      */
-    public static function authorizedToCreate(Request $request): true
+    public static function authorizedToCreate(Request $request): false
     {
-        return true;
+        return false;
+    }
+
+    public function authorizedToUpdate(Request $request): false
+    {
+        return false;
     }
 }

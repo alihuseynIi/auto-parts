@@ -55,16 +55,26 @@ class Brand extends Resource
         ];
     }
 
+    /**
+     * @return string
+     */
     public static function singularLabel(): string
     {
-        return 'Image';
+        return 'Slayder';
     }
 
+    /**
+     * @return string
+     */
     public static function label(): string
     {
         return 'Slayder (brendlər)';
     }
 
+    /**
+     * @param Request $request
+     * @return false
+     */
     public function authorizedToReplicate(Request $request): false
     {
         return false;

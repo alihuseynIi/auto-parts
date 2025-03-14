@@ -55,11 +55,6 @@ class Slider extends Resource
         ];
     }
 
-    public static function singularLabel(): string
-    {
-        return 'Image';
-    }
-
     public static function label(): string
     {
         return 'Slayder';
