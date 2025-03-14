@@ -88,7 +88,7 @@
         </tr>
     </table>
 
-    <a href="{{ url('nova/resources/orders/' . $order->id) }}" class="btn">Sifarişi Gör</a>
+    <a href="{{ url('control/resources/orders/' . $order->id) }}" class="btn">Sifarişi Gör</a>
 
     <p class="footer">© {{ date('Y') }} {{ config('app.name') }}. Bütün hüquqlar qorunur.</p>
 </div>

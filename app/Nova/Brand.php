@@ -48,7 +48,7 @@ class Brand extends Resource
         return [
             ID::make()->sortable(),
 
-            Image::make('Image', 'image')
+            Image::make('Şəkil', 'image')
                 ->disk('public')
                 ->path('brands')
                 ->rules('required')

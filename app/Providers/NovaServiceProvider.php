@@ -58,7 +58,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Nova::style('custom-nova', public_path('nova-custom.css'));
 
         Nova::footer(function (Request $request) {
-            return Blade::render('footer');
+            return null;
         });
     }
 
