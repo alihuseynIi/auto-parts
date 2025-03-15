@@ -39,6 +39,22 @@ class Brand extends Resource
     ];
 
     /**
+     * @return string
+     */
+    public static function singularLabel(): string
+    {
+        return 'Slayder';
+    }
+
+    /**
+     * @return string
+     */
+    public static function label(): string
+    {
+        return 'Slayder (brendlər)';
+    }
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @return array<int, Field>
@@ -53,22 +69,6 @@ class Brand extends Resource
                 ->path('brands')
                 ->rules('required')
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public static function singularLabel(): string
-    {
-        return 'Slayder';
-    }
-
-    /**
-     * @return string
-     */
-    public static function label(): string
-    {
-        return 'Slayder (brendlər)';
     }
 
     /**

@@ -11,7 +11,6 @@ use App\Nova\Product;
 use App\Nova\Slider;
 use App\Nova\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Fortify\Features;
 use Laravel\Nova\Dashboard;
