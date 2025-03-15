@@ -13,10 +13,10 @@ return [
     |
     */
 
-    'reset' => 'Your password has been reset.',
-    'sent' => 'We have emailed your password reset link.',
-    'throttled' => 'Please wait before retrying.',
-    'token' => 'This password reset token is invalid.',
-    'user' => "We can't find a user with that email address.",
+    'reset' => 'Şifrəniz yeniləndi.',
+    'sent' => 'Şifrə yeniləmə linkini e-poçt ünvanınıza göndərdik.',
+    'throttled' => 'Zəhmət olmasa yenidən cəhd etməzdən əvvəl gözləyin.',
+    'token' => 'Bu şifrə yeniləmə tokeni yanlışdır və ya müddəti bitib.',
+    'user' => 'Daxil edilən e-poçt ünvanına uyğun istifadəçi tapılmadı.',
 
 ];

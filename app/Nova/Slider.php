@@ -55,11 +55,26 @@ class Slider extends Resource
         ];
     }
 
+    /**
+     * @return string
+     */
     public static function label(): string
     {
         return 'Slayder';
     }
 
+    /**
+     * @return string
+     */
+    public static function singularLabel(): string
+    {
+        return 'Slayder';
+    }
+
+    /**
+     * @param Request $request
+     * @return false
+     */
     public function authorizedToReplicate(Request $request): false
     {
         return false;

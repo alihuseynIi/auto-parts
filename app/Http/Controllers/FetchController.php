@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CartRequest;
 use App\Http\Requests\GetCategoriesRequest;
 use App\Http\Requests\SearchProductsRequest;
 use App\Http\Resources\CategoriesResourceCollection;

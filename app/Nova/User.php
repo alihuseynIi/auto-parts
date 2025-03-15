@@ -86,7 +86,10 @@ class User extends Resource
                 ->addRowLabel("Yeni Adres")
                 ->fillUsing(function ($request, $model, $attribute, $requestAttribute) {
 
-                    if (empty(json_decode($request['addresses'], true))) {
+                    $isAdmin = (bool)$request->input('is_admin');
+
+                    // Sadece is_admin false ise adres zorunlu olsun
+                    if (!$isAdmin && empty(json_decode($request['addresses'], true))) {
                         throw ValidationException::withMessages([
                             'addresses' => 'Minimum 1 adres əlavə edilməlidir.',
                         ]);
@@ -96,7 +99,7 @@ class User extends Resource
                         $model->save();
                     }
 
-                    $newAddresses = json_decode($request->get('addresses'), true);
+                    $newAddresses = json_decode($request->get('addresses'), true) ?? [];
                     $existingAddresses = UserAddress::query()->where('user_id', $model->id)->get();
 
                     $newAddressIds = [];
@@ -114,8 +117,8 @@ class User extends Resource
                             $existingAddress->delete();
                         }
                     });
-                })->rules('required'),
 
+                })->rules('required_unless:is_admin,1'),
 
             Boolean::make('Admin vəzifəsi', 'is_admin')
                 ->sortable()
