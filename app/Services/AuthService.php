@@ -33,9 +33,9 @@ class AuthService
 
         $captchaResult = json_decode($response->body());
 
-        if (!isset($captchaResult->success) || $captchaResult->success !== true) {
-            return ["message" => "reCAPTCHA is invalid"];
-        }
+//        if (!isset($captchaResult->success) || $captchaResult->success !== true) {
+//            return ["message" => "reCAPTCHA is invalid"];
+//        }
 
         if (!Auth::attempt($credentials)) {
             return ["message" => "Email və ya şifrə yanlışdır"];
