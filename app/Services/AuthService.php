@@ -9,6 +9,7 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AuthService
 {
@@ -34,6 +35,7 @@ class AuthService
         $captchaResult = json_decode($response->body());
 
         if (!isset($captchaResult->success) || $captchaResult->success !== true) {
+            Log::info($captchaResult);
             return ["message" => "reCAPTCHA is invalid"];
         }
 
