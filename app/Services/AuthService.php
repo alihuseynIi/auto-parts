@@ -5,11 +5,9 @@ namespace App\Services;
 use App\Models\User;
 use App\Traits\ExceptionTrait;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class AuthService
 {
@@ -17,26 +15,35 @@ class AuthService
 
     /**
      * @param Request $request
-     * @return array
-     * @throws ConnectionException
+     * @return array|string[]
      */
     public function login(Request $request): array
     {
         $credentials = ["email" => $request->input("email"), "password" => $request->input("password")];
 
         $captchaToken = $request->input('captcha_token');
-        $secretKey    = env('RECAPTCHA_SECRET_KEY');
+        $projectId  = env('RECAPTCHA_ENTERPRISE_PROJECT_ID');
+        $apiKey     = env('RECAPTCHA_ENTERPRISE_API_KEY');
+        $siteKey    = env('RECAPTCHA_ENTERPRISE_SITE_KEY');
 
-        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-            'secret'   => $secretKey,
-            'response' => $captchaToken
-        ]);
+        $enterpriseResponse = Http::post(
+            "https://recaptchaenterprise.googleapis.com/v1/projects/{$projectId}/assessments?key={$apiKey}",
+            [
+                'event' => [
+                    'token'          => $captchaToken,
+                    'siteKey'        => $siteKey,
+                    'expectedAction' => 'login',
+                ],
+            ]
+        );
 
-        $captchaResult = json_decode($response->body());
+        $captchaResult = $enterpriseResponse->json();
 
-        if (!isset($captchaResult->success) || $captchaResult->success !== true) {
-            Log::info($captchaResult);
-            return ["message" => "reCAPTCHA is invalid"];
+        if (
+            !isset($captchaResult['tokenProperties']['valid']) ||
+            $captchaResult['tokenProperties']['valid'] !== true
+        ) {
+            return ['message' => 'reCAPTCHA is invalid.'];
         }
 
         if (!Auth::attempt($credentials)) {
