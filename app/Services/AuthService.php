@@ -21,6 +21,10 @@ class AuthService
     {
         $credentials = ["email" => $request->input("email"), "password" => $request->input("password")];
 
+        if (!Auth::attempt($credentials)) {
+            return ["message" => "Email və ya şifrə yanlışdır"];
+        }
+
         $captchaToken = $request->input('captcha_token');
         $projectId  = env('RECAPTCHA_ENTERPRISE_PROJECT_ID');
         $apiKey     = env('RECAPTCHA_ENTERPRISE_API_KEY');
@@ -44,10 +48,6 @@ class AuthService
             $captchaResult['tokenProperties']['valid'] !== true
         ) {
             return ['message' => 'reCAPTCHA is invalid.'];
-        }
-
-        if (!Auth::attempt($credentials)) {
-            return ["message" => "Email və ya şifrə yanlışdır"];
         }
 
         return $this->createTokenResponse(Auth::user());
