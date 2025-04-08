@@ -70,12 +70,11 @@ class Category extends Resource
                     'car_model' => "Avtomobilin modeli",
                 ])
                 ->displayUsingLabels()
-                ->dependsOn(['parent'], function (Select $field, NovaRequest $request, FormData $formData) {
-                    if ($formData->get('parent') === 'car_brand') {
-                        $field->readonly();
-                    } else {
-                        $field->readonly(false);
+                ->readonly(function (NovaRequest $request) {
+                    if ($request->isUpdateOrUpdateAttachedRequest()) {
+                        return $this->parent === 'car_brand';
                     }
+                    return false;
                 }),
 
             Select::make('Avtomobilin markası', 'brand_id')

@@ -26,9 +26,12 @@ class AuthService
         }
 
         $captchaToken = $request->input('captcha_token');
-        $projectId  = env('RECAPTCHA_ENTERPRISE_PROJECT_ID');
-        $apiKey     = env('RECAPTCHA_ENTERPRISE_API_KEY');
-        $siteKey    = env('RECAPTCHA_ENTERPRISE_SITE_KEY');
+//        $projectId  = env('RECAPTCHA_ENTERPRISE_PROJECT_ID');
+//        $apiKey     = env('RECAPTCHA_ENTERPRISE_API_KEY');
+//        $siteKey    = env('RECAPTCHA_ENTERPRISE_SITE_KEY');
+        $projectId = "auto-parts-555-1742851351503";
+        $apiKey = "AIzaSyAgvTUYqlhL6zkxFba2DCyMhj9YfRM15ak";
+        $siteKey = "6LdA7P4qAAAAAD0GgK_zyal2L3jWRi54wplxKUR0";
 
         $enterpriseResponse = Http::post(
             "https://recaptchaenterprise.googleapis.com/v1/projects/{$projectId}/assessments?key={$apiKey}",
